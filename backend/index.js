@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cookieParser from 'cookie-parser';
+
 import multer from 'multer';
 import cors from 'cors';
 // import { createServer } from 'http';
@@ -18,7 +18,7 @@ const app = express();
 
 dotenv.config();
 app.use(cors());
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use(express.json());
 
 //routes

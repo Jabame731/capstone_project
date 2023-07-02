@@ -10,7 +10,7 @@ import { verifyUser } from '../middleware/verify.js';
 
 const router = express.Router();
 
-router.post('/registerVehicle', registerVehicle);
+router.post('/registerVehicle', verifyUser, registerVehicle);
 router.get('/getVehicleLists', getVehicleLists);
 router.get('/getVehicle/:id', getVehicleInformation);
 router.delete('/deleteVehicle/:id', deleteVehicle);

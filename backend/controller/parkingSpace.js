@@ -31,7 +31,7 @@ export const getParkingSpaceById = (req, res) => {
   const parkingSpaceId = req.params.id;
 
   const query =
-    'SELECT * FROM parking_space INNER JOIN parking_lot ON parking_space.lot_id = parking_lot.id';
+    'SELECT * FROM parking_space INNER JOIN parking_lot ON parking_space.lot_number = parking_lot.id';
 
   connection.query(query, [parkingSpaceId], (err, data) => {
     if (err) return res.status(500).json(err);

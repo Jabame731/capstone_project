@@ -3,11 +3,6 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { generateUniqueIdentifier } from '../helpers/index.js';
 
-//generate a unique token
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET_KEY);
-};
-
 export const registerUser = (req, res) => {
   //parsed request body data
   const {
@@ -22,12 +17,12 @@ export const registerUser = (req, res) => {
   } = req.body;
 
   //check for existing user
-  const query = 'SELECT * FROM `user` WHERE `email` = ?';
+  const query = 'SELECT * FROM `users` WHERE `email` = ?';
 
   connection.query(query, [email], (err, data) => {
     if (err) return res.json(err);
 
-    if (!username || !email || !password) {
+    if (!email || !password) {
       return res.status(400).json('Please provide required fields');
     }
 
@@ -90,4 +85,9 @@ export const loginUser = (req, res) => {
       token: generateToken(data[0].id),
     });
   });
+};
+
+//generate a unique token
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET);
 };
