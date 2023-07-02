@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { Slide, toast } from 'react-toastify';
 import { reset } from '../store/auth/reducer';
 import { registerUser } from '../store/auth/action';
+import Loading from '../components/Loading';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -32,7 +33,9 @@ const Register = () => {
     telephone_number,
   } = registerData;
 
-  const { user, isError, isSuccess } = useAppSelector((state) => state.auth);
+  const { user, isError, isSuccess, isLoading } = useAppSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
     if (isError) {
@@ -44,7 +47,7 @@ const Register = () => {
 
     if (isSuccess) {
       toast.success('You are Registered');
-      navigate('/login');
+      navigate('/');
     }
 
     dispatch(reset());
@@ -76,6 +79,10 @@ const Register = () => {
       dispatch(registerUser(userData));
     }
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className='bg-primary font-poppins'>

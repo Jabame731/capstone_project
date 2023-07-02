@@ -1,9 +1,11 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { authReducer } from './auth/reducer';
+import { parkingReducer } from './parking-lot/reducer';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    parking: parkingReducer,
   },
 });
 
