@@ -3,10 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../store/hooks';
 import Navbar from '../../components/Navbar';
 import axios from 'axios';
+import { ParkingLot, ParkingSpaces } from '../../utilities/enums';
 
 const ParkingSpace = () => {
-  const [parkingLot, setParkingLot] = useState({});
-  const [parkingSpaces, setParkingSpace] = useState([]);
+  const [parkingLot, setParkingLot] = useState<ParkingLot | null>(null);
+  const [parkingSpaces, setParkingSpace] = useState<ParkingSpaces[]>([]);
 
   const location = useLocation();
 
@@ -45,33 +46,33 @@ const ParkingSpace = () => {
   return (
     <>
       <Navbar />
-      <div class='max-w-[1240px]  mx-auto px-4 py-8'>
-        <div class='bg-gray-100 rounded-lg shadow-lg p-8'>
-          <h1 class='text-3xl font-bold mb-6'>Parking Lot</h1>
-          <div class='mb-4'>
-            <span class='font-bold'>Name:</span> {parkingLot.name}
+      <div className='max-w-[1240px]  mx-auto px-4 py-8'>
+        <div className='bg-gray-100 rounded-lg shadow-lg p-8'>
+          <h1 className='text-3xl font-bold mb-6'>Parking Lot</h1>
+          <div className='mb-4'>
+            <span className='font-bold'>Name:</span> {parkingLot?.name}
           </div>
-          <div class='mb-4'>
-            <span class='font-bold'>Address:</span> {parkingLot.address}
+          <div className='mb-4'>
+            <span className='font-bold'>Address:</span> {parkingLot?.address}
           </div>
-          <div class='mb-4'>
-            <span class='font-bold'>Capacity:</span> {parkingLot.capacity}
+          <div className='mb-4'>
+            <span className='font-bold'>Capacity:</span> {parkingLot?.capacity}
           </div>
         </div>
       </div>
 
-      <div class='max-w-[1240px]  mx-auto mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
+      <div className='max-w-[1240px]  mx-auto mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
         {parkingSpaces.map((parkingSpace) => (
           <div
             className={`bg-white rounded-lg shadow-md p-4 ${
-              parkingSpace.sensor_value === '0' ||
+              parkingSpace.sensor_value === 0 ||
               parkingSpace.availabilty === 'Reserved'
                 ? 'cursor-not-allowed'
                 : ''
             }`}
             key={parkingSpace.id}
           >
-            {parkingSpace.sensor_value === '0' ? (
+            {parkingSpace.sensor_value === 0 ? (
               <div>
                 <span className='px-2 py-1 text-sm text-white bg-red-500 rounded-full'>
                   Occupied
@@ -81,7 +82,7 @@ const ParkingSpace = () => {
               <>
                 <div
                   className={`${
-                    parkingSpace.sensor_value === '0' ||
+                    parkingSpace.sensor_value === 0 ||
                     parkingSpace.availabilty === 'Reserved'
                       ? 'disabled-link'
                       : ''
@@ -107,7 +108,7 @@ const ParkingSpace = () => {
                 <span className={`px-2  text-sm text-black rounded-full`}>
                   {parkingSpace.availabilty === 'Reserved'
                     ? 'Already Reserved'
-                    : parkingSpace.sensor_value === '0'
+                    : parkingSpace.sensor_value === 0
                     ? 'Occupied'
                     : ''}
                 </span>

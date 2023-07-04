@@ -10,3 +10,5 @@ export const GET_PARKING_LOT_BY_ID = (id: string) =>
   `/parkingLot/getParkingLotById/${id}`;
 
 export const EDIT_USER = () => ``;
+
+export const RESERVE_PARKING_SLOT = `/reservation/reserveParkingSpot`;

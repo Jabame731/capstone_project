@@ -41,7 +41,7 @@ const ParkingLot = () => {
         {parkingLots.map((parkingLot) => (
           <div
             className='max-w-sm rounded overflow-hidden shadow-lg flex w-1/3 m-10'
-            key={parkingLot._id}
+            key={parkingLot.id}
           >
             <Link to={`/parking-lots/${parkingLot.id}`}>
               <div>
