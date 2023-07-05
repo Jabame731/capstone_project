@@ -1,26 +1,42 @@
 import { connection } from '../config/db.js';
 
 export const reserveParkingSpot = (req, res) => {
-  const parkingSlotId = req.params.id;
   const userId = req.user.id;
 
-  const { start_time, end_time } = req.body;
+  const {
+    space_id,
+    vehicle_name,
+    start_time,
+    start_date,
+    end_time,
+    end_date,
+    payment,
+  } = req.body;
 
   const query = 'SELECT * FROM reservation reservation WHERE id = ?';
 
-  connection.query(query, [parkingSlotId], (err, data) => {
+  connection.query(query, [space_id], (err, data) => {
     if (err) return res.status(500).json(err);
 
     if (data.length > 0) return res.status(409).json('Spot has been reserved');
 
     const query =
-      'INSERT INTO reservation (`space_id`,`sensor_value`, `start_time`, `end_time`, `user_id`) VALUES (?)';
+      'INSERT INTO reservation (`space_id`, `vehicle_name`, `start_time`,`start_date`, `end_time`, `end_date`, `payment`, `user_id`) VALUES (?)';
 
     //update the availabilty in the parking_space if its reserved
     const updateAvailabilityQuery =
       'UPDATE parking_space SET availabilty = ? WHERE id = ?';
 
-    const values = [space_id, sensor_value, start_time, end_time, userId];
+    const values = [
+      space_id,
+      vehicle_name,
+      start_time,
+      start_date,
+      end_time,
+      end_date,
+      payment,
+      userId,
+    ];
 
     //query to insert the values to the reservation
     connection.query(query, [values], (err, _) => {
