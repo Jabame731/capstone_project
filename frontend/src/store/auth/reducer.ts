@@ -4,6 +4,8 @@ import { UserState } from './types';
 
 const user = JSON.parse(localStorage.getItem('user') as string);
 
+console.log(user);
+
 export const initialState: UserState = {
   user: user ? user : '',
   isError: false,

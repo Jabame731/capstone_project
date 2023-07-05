@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { reset } from '../../store/reservation/reducer';
+import { createParkingReservation } from '../../store/reservation/action';
+import { toast } from 'react-toastify';
 
 const ReservationForm = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const location = useLocation();
 
   const [dateInput, setDateInput] = useState({
     start_date: '',
@@ -16,19 +20,69 @@ const ReservationForm = () => {
     end_time: '',
   });
 
+  const [vehicleName, setVehicleName] = useState({
+    vehicle_name: '',
+  });
+
   console.log('start', dateInput.start_date, timeInput.start_time);
   console.log('end', dateInput.end_date, timeInput.end_time);
 
   const [validationError, setValidationError] = useState('');
   const [payment, setPayment] = useState<number | null>(null);
 
+  const { vehicle_name } = vehicleName;
   const { start_date, end_date } = dateInput;
   const { start_time, end_time } = timeInput;
 
   const { user } = useAppSelector((state) => state.auth);
-  const { reservation, isError, isSuccess } = useAppSelector(
-    (state) => state.reservation
-  );
+  const { isSuccess } = useAppSelector((state) => state.reservation);
+
+  const space_id = location.pathname.split('/')[2];
+
+  console.log('parking space id', space_id);
+
+  useEffect(() => {
+    const startDateTime = new Date(`${start_date} ${start_time}`);
+    const endDateTime = new Date(`${end_date} ${end_time}`);
+
+    if (endDateTime < startDateTime) {
+      setValidationError('End date cannot be less than the start date');
+    } else {
+      const startHour = startDateTime.getHours();
+      const endHour = endDateTime.getHours();
+      const hours = endHour - startHour;
+      const paymentAmount = hours * 30;
+      setPayment(paymentAmount);
+      setValidationError('');
+
+      if (!user) {
+        navigate('/');
+      }
+
+      if (isSuccess) {
+        toast.success('successfully book parking slot');
+        navigate('/user-dashboard');
+      }
+
+      dispatch(reset());
+    }
+  }, [
+    start_date,
+    end_date,
+    start_time,
+    end_time,
+    user,
+    navigate,
+    dispatch,
+    isSuccess,
+  ]);
+
+  const hanleVehicleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVehicleName((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   const dateHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDateInput((prevState) => ({
@@ -58,26 +112,21 @@ const ReservationForm = () => {
       setValidationError('End date cannot be less than the start date');
       return;
     }
+
+    const reservationData = {
+      space_id,
+      vehicle_name,
+      start_date,
+      start_time,
+      end_time,
+      end_date,
+      payment: payment?.toString(),
+    };
+
+    dispatch(createParkingReservation(reservationData));
   };
 
-  useEffect(() => {
-    const startDateTime = new Date(`${start_date} ${start_time}`);
-    const endDateTime = new Date(`${end_date} ${end_time}`);
-
-    if (endDateTime < startDateTime) {
-      setValidationError('End date cannot be less than the start date');
-    } else {
-      const startHour = startDateTime.getHours();
-      const endHour = endDateTime.getHours();
-      const hours = endHour - startHour;
-      const paymentAmount = hours * 30;
-      setPayment(paymentAmount);
-      setValidationError('');
-    }
-  }, [start_date, end_date, start_time, end_time]);
-
-  console.log('error is', validationError);
-  console.log('payment is: ', payment);
+  console.log(payment);
 
   return (
     <>
@@ -92,6 +141,19 @@ const ReservationForm = () => {
               {validationError && (
                 <span className='text-rose-500'>{validationError}</span>
               )}
+              <div className='grid grid-cols-1 gap-6 mt-10 sm:grid-cols-1'>
+                <div>
+                  <label className='text-dimWhite '>Vehicle Name</label>
+                  <input
+                    type='text'
+                    name='vehicle_name'
+                    value={vehicle_name}
+                    onChange={hanleVehicleChange}
+                    className={`mt-2 bg-primary relative block w-full appearance-none p-3 rounded-lg border border-gray-800 px-3 py-2 text-dimWhite placeholder-gray-500 focus:z-10 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring sm:text-sm`}
+                  />
+                </div>
+              </div>
+
               <div className='grid grid-cols-1 gap-6 mt-10 sm:grid-cols-2'>
                 <div>
                   <label className='text-dimWhite '>Start Date</label>

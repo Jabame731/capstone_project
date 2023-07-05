@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
     element: <ParkingSpace />,
   },
   {
-    path: '/reserve-parking-slot/:id',
+    path: '/reserve-parking-slot/:parkingSpaceId',
     element: <ReservationForm />,
   },
 ]);
