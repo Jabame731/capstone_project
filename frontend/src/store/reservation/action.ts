@@ -16,3 +16,17 @@ export const createParkingReservation = createAsyncThunk<
     return thunkAPI.rejectWithValue({ err: err.data });
   }
 });
+
+export const getReservationByUser = createAsyncThunk<Reservation[]>(
+  'GET_RESERVATION_BY_USER',
+  async (_, thunkAPI) => {
+    try {
+      const authState = thunkAPI.getState() as AuthState;
+      const token = authState.auth.user.token;
+
+      return await reservationService.getReservationByUser(token);
+    } catch (err: any) {
+      return thunkAPI.rejectWithValue({ err: err.data });
+    }
+  }
+);

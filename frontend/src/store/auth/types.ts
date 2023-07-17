@@ -6,7 +6,7 @@ export interface User {
   address: string;
   phone_number: string;
   telephone_number: string;
-  image: string;
+
   user_role: string;
   uniqueId: string;
   token: string;
@@ -22,6 +22,15 @@ export interface UserState {
 export interface RegisterUserInput {
   email: string;
   password: string;
+  first_name: string;
+  last_name: string;
+  address: string;
+  phone_number: string;
+  telephone_number: string;
+}
+
+export interface EditUserInput {
+  email: string;
   first_name: string;
   last_name: string;
   address: string;

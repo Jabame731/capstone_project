@@ -5,6 +5,7 @@ import { Slide, toast } from 'react-toastify';
 import { reset } from '../store/auth/reducer';
 import { loginUser } from '../store/auth/action';
 import Loading from '../components/Loading';
+import { shallowEqual } from 'react-redux';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const Login = () => {
     }
 
     if (isSuccess) {
-      navigate('/user-dashboard');
+      navigate('/');
     }
 
     dispatch(reset());

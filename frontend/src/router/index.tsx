@@ -8,10 +8,11 @@ import ParkingLot from '../pages/parking/ParkingLot';
 import ReservationForm from '../pages/reservation/ReservationForm';
 import UserProfile from '../pages/UserProfile';
 import ParkingSpace from '../pages/parking/ParkingSpace';
+import EditUser from '../pages/EditUser';
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/login',
     element: <Login />,
     errorElement: <ErrorPage />,
   },
@@ -20,12 +21,16 @@ export const router = createBrowserRouter([
     element: <Register />,
   },
   {
-    path: '/user-dashboard',
+    path: '/',
     element: <UserDashboard />,
   },
   {
     path: '/user-profile',
     element: <UserProfile />,
+  },
+  {
+    path: '/edit-profile/:userId',
+    element: <EditUser />,
   },
   {
     path: '/parking-lots',

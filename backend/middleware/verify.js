@@ -11,27 +11,40 @@ export const verifyUser = (req, res, next) => {
     try {
       token = req.headers.authorization.split(' ')[1];
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      const query = 'SELECT * FROM `users` WHERE `id` = ?';
-
-      connection.query(query, [decoded.id], (err, data) => {
+      jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
           console.log(err);
-          res.status(401).json('Not Authorized');
+
+          if (
+            err.name === 'JsonWebTokenError' &&
+            err.message === 'jwt malformed'
+          ) {
+            return res.status(401).json('JWT Malformed');
+          }
+
+          return res.status(401).json('Not authorized');
         }
 
-        req.user = data[0];
-        next();
+        const query = 'SELECT * FROM `users` WHERE `id` = ?';
+
+        connection.query(query, [decoded.id], (err, data) => {
+          if (err) {
+            console.log(err);
+            return res.status(401).json('Not authorized');
+          }
+
+          req.user = data[0];
+          next();
+        });
       });
     } catch (error) {
       console.log(error);
-      res.status(401).json('Not authorized');
+      return res.status(401).json('Not authorized');
     }
   }
 
   if (!token) {
-    res.status(401).json('Not Authorized, no token');
+    return res.status(401).json('Not Authorized, no token');
   }
 };
 

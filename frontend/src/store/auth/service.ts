@@ -1,6 +1,11 @@
 import axios from 'axios';
-import { APP_BASE_URL, LOGIN_API, REGISTER_API } from '../../utilities/api';
-import { LoginUserInput, RegisterUserInput } from './types';
+import {
+  APP_BASE_URL,
+  EDIT_USER,
+  LOGIN_API,
+  REGISTER_API,
+} from '../../utilities/api';
+import { EditUserInput, LoginUserInput, RegisterUserInput } from './types';
 
 const registerUser = async (userData: RegisterUserInput) => {
   const response = await axios.post(APP_BASE_URL + REGISTER_API, userData);
@@ -26,10 +31,21 @@ const logoutUser = () => {
   localStorage.removeItem('user');
 };
 
+//crud user
+const editUser = async (uniqueId: string, userData: EditUserInput) => {
+  const response = await axios.put(
+    APP_BASE_URL + EDIT_USER(uniqueId),
+    userData
+  );
+
+  return response.data;
+};
+
 const authService = {
   registerUser,
   loginUser,
   logoutUser,
+  editUser,
 };
 
 export default authService;

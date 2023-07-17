@@ -8,6 +8,6 @@ import { verifyUser } from '../middleware/verify.js';
 const router = express.Router();
 
 router.post('/reserveParkingSpot', verifyUser, reserveParkingSpot);
-router.get('/getReservationByUserId/:id', getReservationByUserId);
+router.get('/getReservationByUser', verifyUser, getReservationByUserId);
 
 export default router;

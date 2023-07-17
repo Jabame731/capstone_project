@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { reset } from '../../store/reservation/reducer';
 import { createParkingReservation } from '../../store/reservation/action';
-import { toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
+import { shallowEqual } from 'react-redux';
 
 const ReservationForm = () => {
   const navigate = useNavigate();
@@ -34,8 +34,8 @@ const ReservationForm = () => {
   const { start_date, end_date } = dateInput;
   const { start_time, end_time } = timeInput;
 
-  const { user } = useAppSelector((state) => state.auth);
-  const { isSuccess } = useAppSelector((state) => state.reservation);
+  const { user } = useAppSelector((state) => state.auth, shallowEqual);
+  const { isSuccess, isError } = useAppSelector((state) => state.reservation);
 
   const space_id = location.pathname.split('/')[2];
 
@@ -56,15 +56,13 @@ const ReservationForm = () => {
       setValidationError('');
 
       if (!user) {
-        navigate('/');
+        navigate('/login');
       }
 
       if (isSuccess) {
         toast.success('successfully book parking slot');
-        navigate('/user-dashboard');
+        navigate('/');
       }
-
-      dispatch(reset());
     }
   }, [
     start_date,

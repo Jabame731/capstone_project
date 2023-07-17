@@ -5,12 +5,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import NotAllowed from '../components/NotAllowed';
 
 const UserProfile = () => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-
   const { user } = useAppSelector((state) => state.auth);
-
-  useEffect(() => {}, []);
 
   if (!user) {
     return <NotAllowed />;
@@ -34,11 +29,6 @@ const UserProfile = () => {
           </div>
           <div className='px-4 py-5 sm:p-6'>
             <div className='flex flex-col items-center'>
-              <img
-                className='h-32 w-32 rounded-full object-cover'
-                src=''
-                alt='UserImage'
-              />
               <h2 className='mt-4 font-medium text-lg text-black'>
                 {}
                 {user?.first_name} {user?.last_name}
@@ -77,7 +67,7 @@ const UserProfile = () => {
               </dl>
             </div>
             <div className='flex justify-between  mt-5'>
-              <Link to={`edit-profile/?identification=${user?.uniqueId}`}>
+              <Link to={`/edit-profile/${user?.uniqueId}`}>
                 <button
                   className='text-sm px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-gray-600 sm:text-sm'
                   type='submit'

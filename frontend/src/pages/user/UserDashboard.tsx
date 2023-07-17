@@ -2,21 +2,37 @@ import React, { useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useNavigate, Link } from 'react-router-dom';
-
 import NotAllowed from '../../components/NotAllowed';
 
-const UserDashboard = () => {
-  const reservations = [];
+import { reset } from '../../store/reservation/reducer';
+import Loading from '../../components/Loading';
+import { getReservationByUser } from '../../store/reservation/action';
+import { shallowEqual } from 'react-redux';
+import ReservationItem from '../../components/smart-components/ReservationItem';
 
+const UserDashboard = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { user } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth, shallowEqual);
 
-  useEffect(() => {}, []);
+  const { reservations, isLoading } = useAppSelector(
+    (state) => state.reservation
+  );
 
-  if (!user) {
-    return <NotAllowed />;
+  console.log(reservations);
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+
+    dispatch(getReservationByUser());
+    dispatch(reset());
+  }, [user, navigate, dispatch]);
+
+  if (isLoading) {
+    return <Loading />;
   }
 
   return (
@@ -29,14 +45,25 @@ const UserDashboard = () => {
               <table className='w-full table-auto'>
                 <thead>
                   <tr className=' text-dimWhite uppercase text-sm leading-normal'>
-                    <th className='py-3 px-6 text-center'>Parking Lot Name</th>
                     <th className='py-3 px-6 text-center'>
                       Parking Space Number
                     </th>
-                    <th className='py-3 px-6 text-center'>Status</th>
+                    <th className='py-3 px-6 text-center'>Vehicle Name</th>
+                    <th className='py-3 px-6 text-center'>Date Started</th>
+                    <th className='py-3 px-6 text-center'>Date Ended</th>
+                    <th className='py-3 px-6 text-center'>Time Start</th>
+                    <th className='py-3 px-6 text-center'>Time End</th>
+                    <th className='py-3 px-6 text-center'>Price Total</th>
                   </tr>
                 </thead>
-                <tbody className='text-white text-sm font-light'></tbody>
+                <tbody className='text-white text-sm font-light'>
+                  {reservations.map((reservation) => (
+                    <ReservationItem
+                      key={reservation.id}
+                      reservation={reservation}
+                    />
+                  ))}
+                </tbody>
               </table>
             ) : (
               <h3 className='flex justify-center items-center text-lg font-semibold  capitalize text-rose-500 mt-10'>

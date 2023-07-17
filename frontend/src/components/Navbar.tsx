@@ -18,7 +18,7 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logoutUser());
     dispatch(reset());
-    navigate('/');
+    navigate('/login');
   };
 
   const toggeMenu = () => {
@@ -28,7 +28,7 @@ const Navbar = () => {
   return (
     <div className='w-full h-[90px]'>
       <div className='max-w-[1240px] mx-auto px-4 flex justify-between items-center h-full'>
-        <Link to='/user-dashboard'>
+        <Link to='/'>
           <div>
             <h1 className='text-[#3b82f6]'>Smart Parking</h1>
           </div>
@@ -44,12 +44,6 @@ const Navbar = () => {
                 <Link to='/user-profile'>
                   <li>Profile</li>
                 </Link>
-                {/* <Link to='/reserve'>
-                <li>Reserve</li>
-              </Link>
-              <Link to='/vehicle'>
-                <li>Vehicle</li>
-              </Link> */}
                 <button onClick={handleLogout}>
                   <li className='text-xl'>
                     <FiLogOut />
@@ -96,12 +90,6 @@ const Navbar = () => {
                 <Link to='/user-profile'>
                   <li>Profile</li>
                 </Link>
-                {/* <Link to='/reserve'>
-                  <li>Reserve</li>
-                </Link>
-                <Link to='/vehicle'>
-                  <li>Vehicle</li>
-                </Link> */}
                 <button onClick={handleLogout}>
                   <li className='text-xl'>
                     <FiLogOut />

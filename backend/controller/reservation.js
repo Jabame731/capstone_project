@@ -13,6 +13,10 @@ export const reserveParkingSpot = (req, res) => {
     payment,
   } = req.body;
 
+  if (!vehicle_name) {
+    return res.status(400).json('Please provide required fields');
+  }
+
   const query = 'SELECT * FROM reservation reservation WHERE id = ?';
 
   connection.query(query, [space_id], (err, data) => {
@@ -55,7 +59,7 @@ export const reserveParkingSpot = (req, res) => {
 };
 
 export const getReservationByUserId = (req, res) => {
-  const id = req.params.id;
+  const id = req.user.id;
 
   const query = 'SELECT * FROM reservation WHERE user_id = ?';
 

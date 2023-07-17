@@ -91,3 +91,65 @@ export const loginUser = (req, res) => {
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET);
 };
+
+//update user
+export const updateUser = (req, res) => {
+  const id = req.params.id;
+
+  const {
+    email,
+    first_name,
+    last_name,
+    address,
+    phone_number,
+    telephone_number,
+  } = req.body;
+
+  const query = 'SELECT * FROM `users` WHERE `uniqueId` = ?';
+
+  connection.query(query, [id], (err, data) => {
+    if (err) {
+      return res.status(500).json(err);
+    }
+
+    if (data.length === 0) {
+      return res.status(400).json('User not found');
+    }
+
+    const updateUserQuery =
+      'UPDATE `users` SET `email` = ?, `first_name` = ?, `last_name` = ?, `address` = ?, `phone_number` = ?, `telephone_number` = ?, `updated_at` = ?  WHERE `uniqueId` = ?';
+
+    const date = new Date();
+    const updatedUserDate = date.toISOString().slice(0, 19).replace('T', ' ');
+
+    const values = [
+      email,
+      first_name,
+      last_name,
+      address,
+      phone_number,
+      telephone_number,
+      updatedUserDate,
+      id,
+    ];
+
+    connection.query(updateUserQuery, values, (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json(err);
+      }
+
+      // Fetch the updated user from the database
+      const fetchUpdatedUserQuery =
+        'SELECT * FROM `users` WHERE `uniqueId` = ?';
+
+      connection.query(fetchUpdatedUserQuery, [id], (err, updatedData) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json(err);
+        }
+        return res.status(200).json(updatedData[0]);
+      });
+    });
+  });
+};

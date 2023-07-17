@@ -1,14 +1,17 @@
 export interface Reservation {
   id: number;
+  space_id: number;
+  vehicle_name: string;
   start_time: string;
   start_date: string;
   end_time: string;
   end_date: string;
+  payment: string;
   user_id: string;
 }
 
 export interface ReservationInput {
-  space_id: string;
+  vehicle_name: string;
   start_time: string;
   start_date: string;
   end_time: string;
@@ -16,7 +19,7 @@ export interface ReservationInput {
 }
 
 export interface ReservationState {
-  reservation: Reservation[];
+  reservations: Reservation[];
   isError: boolean;
   isSuccess: boolean;
   isLoading: boolean;

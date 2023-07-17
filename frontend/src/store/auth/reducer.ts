@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginUser, registerUser, logoutUser } from './action';
+import { loginUser, registerUser, logoutUser, editUser } from './action';
 import { UserState } from './types';
 
 const user = JSON.parse(localStorage.getItem('user') as string);
@@ -34,6 +34,7 @@ export const userSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
         state.user = action.payload;
+        localStorage.setItem('user', JSON.stringify(action.payload));
       })
       .addCase(registerUser.rejected, (state, _) => {
         state.isError = true;
@@ -50,6 +51,7 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.user = action.payload;
+        localStorage.setItem('user', JSON.stringify(action.payload));
       })
       .addCase(loginUser.rejected, (state, _) => {
         state.isLoading = false;
@@ -61,6 +63,22 @@ export const userSlice = createSlice({
     builder.addCase(logoutUser.fulfilled, (state, _) => {
       state.user = null;
     });
+
+    builder
+      .addCase(editUser.pending, (state, _) => {
+        state.isLoading = true;
+      })
+      .addCase(editUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.user = action.payload;
+      })
+      .addCase(editUser.rejected, (state, _) => {
+        state.isError = true;
+        state.isLoading = false;
+        state.user = undefined;
+      });
   },
 });
 

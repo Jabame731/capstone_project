@@ -18,7 +18,6 @@ const app = express();
 
 dotenv.config();
 app.use(cors());
-// app.use(cookieParser());
 app.use(express.json());
 
 //routes
@@ -41,7 +40,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // route for image upload
-app.post('api/upload', upload.single('file'), (req, res, next) => {
+app.post('/api/upload', upload.single('file'), (req, res, next) => {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
   const file = req.file;
@@ -60,7 +59,7 @@ app.post('/data', (req, res) => {
 
   if (sensor == 1) {
     value1 = value;
-    // console.log('value of 1', value1);
+
     const query = `
     UPDATE parking_space
     SET sensor_value = CASE

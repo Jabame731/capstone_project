@@ -3,8 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { getParkingLotLists } from '../../store/parking-lot/action';
-import { reset } from '../../store/auth/reducer';
+
 import Loading from '../../components/Loading';
+import { reset } from '../../store/parking-lot/reducer';
 
 const ParkingLot = () => {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ const ParkingLot = () => {
         {parkingLots.map((parkingLot) => (
           <div
             className='max-w-sm rounded overflow-hidden shadow-lg flex w-1/3 m-10'
+            data-cy='parking_space'
             key={parkingLot.id}
           >
             <Link to={`/parking-lots/${parkingLot.id}`}>
